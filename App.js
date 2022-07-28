@@ -1,12 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function App() {
+import "./index.css"
+
+const API_URL = `http://api.icndb.com/jokes/random`;
+
+function App() {
+  const [ joke, setJoke ] = useState('');
+
+  const generateJoke = () => {
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(data => setJoke(data.value.joke));
+  }
+
+  useEffect(() => {
+    generateJoke();
+  }, [])
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <div className="box">
+      <h2>Chuck Norris Jokes Generator</h2>
+      <p dangerouslySetInnerHTML={{__html: joke}} />
+      <button onClick={generateJoke}>Get new joke 😂</button>
+    </div>
   );
 }
 
@@ -18,3 +35,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default App;
